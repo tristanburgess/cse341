@@ -49,3 +49,71 @@ fun dates_in_months(dates: date list, months: int list) =
     if null(months)
     then []
     else dates_in_month(dates, hd(months)) @ dates_in_months(dates, tl(months))
+
+(* Problem 6: get_nth *)
+fun get_nth(elems: string list, idx: int) =
+    if idx = 1
+    then hd(elems)
+    else get_nth(tl(elems), idx - 1)
+
+(* Problem 7: date_to_string *)
+fun date_to_string(date: date) =
+    get_nth(
+        [
+            "January", 
+            "February", 
+            "March", 
+            "April", 
+            "May", 
+            "June", 
+            "July", 
+            "August", 
+            "September", 
+            "October", 
+            "November", 
+            "December"
+        ], (#2 date)
+    ) ^ " " ^
+    Int.toString((#3 date)) ^ ", " ^ Int.toString((#1 date))
+
+(* Problem 8: number_before_reaching_sum *)
+fun number_before_reaching_sum(sum: int, accs: int list) =
+    if sum > 0
+    then 1 + number_before_reaching_sum(sum - hd(accs), tl(accs))
+    else 0
+
+(* Problem 9: what_month *)
+fun what_month(doy: int) =
+    number_before_reaching_sum(doy, [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31])
+
+(* Problem 10: month_range *)
+fun month_range(doy1: int, doy2: int) =
+    if doy1 > doy2
+    then []
+    else what_month(doy1) :: month_range(doy1 + 1, doy2)
+
+(* Problem 11: oldest *)
+fun oldest(dates: date list) =
+    if null(dates)
+    then NONE
+    else let
+        fun oldest_nonempty(dates: date list) =
+            if null(tl(dates))
+            then hd(dates)
+            else let val tl_oldest = oldest_nonempty(tl(dates))
+                in
+                    if is_older(hd(dates), tl_oldest)
+                    then hd(dates)
+                    else tl_oldest
+                end
+    in
+        SOME(oldest_nonempty(dates))
+    end
+
+(* Problem 12: number_in_months_challenge *)
+
+
+(* Problem 12: dates_in_months_challenge *)
+
+
+(* Problem 13: reasonable_date *)
