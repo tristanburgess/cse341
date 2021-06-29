@@ -12,13 +12,15 @@ type date = (int*int*int)
 
 (* Problem 1: is_older *)
 fun is_older(x: date, y: date) =
-    if (#1 x) <  (#1 y)
-    then true
-    else if (#1 x) =  (#1 y) andalso (#2 x) <  (#2 y)
-    then true
-    else if (#1 x) =  (#1 y) andalso (#2 x) =  (#2 y) andalso (#3 x) < (#3 y)
-    then true
-    else false
+    (
+        (#1 x) <  (#1 y)
+    ) orelse
+    (
+        (#1 x) =  (#1 y) andalso (#2 x) <  (#2 y)
+    ) orelse
+    (
+        (#1 x) =  (#1 y) andalso (#2 x) =  (#2 y) andalso (#3 x) < (#3 y)
+    )
 
 (* Problem 2: number_in_month *)
 fun number_in_month(dates: date list, month: int) =
@@ -51,7 +53,7 @@ fun dates_in_months(dates: date list, months: int list) =
     else dates_in_month(dates, hd(months)) @ dates_in_months(dates, tl(months))
 
 (* Problem 6: get_nth *)
-fun get_nth(elems: string list, idx: int) =
+fun get_nth(elems: 'a list, idx: int) =
     if idx = 1
     then hd(elems)
     else get_nth(tl(elems), idx - 1)
@@ -80,11 +82,11 @@ fun date_to_string(date: date) =
 fun number_before_reaching_sum(sum: int, accs: int list) =
     if sum > 0
     then 1 + number_before_reaching_sum(sum - hd(accs), tl(accs))
-    else 0
+    else ~1
 
 (* Problem 9: what_month *)
 fun what_month(doy: int) =
-    number_before_reaching_sum(doy, [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31])
+    number_before_reaching_sum(doy, [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]) + 1
 
 (* Problem 10: month_range *)
 fun month_range(doy1: int, doy2: int) =
@@ -110,10 +112,50 @@ fun oldest(dates: date list) =
         SOME(oldest_nonempty(dates))
     end
 
-(* Problem 12: number_in_months_challenge *)
+(* Problem 12: challenge problem helper functions *)
+fun not_in_list(i: int, l: int list) =
+    null(l) orelse (hd(l) <> i andalso not_in_list(i, tl(l)))
 
+fun dedupe(l: int list) =
+    if null(l)
+    then []
+    else let val deduped = dedupe(tl(l))
+        in
+            if not_in_list(hd(l), deduped)
+            then hd(l) :: deduped
+            else deduped
+        end
 
-(* Problem 12: dates_in_months_challenge *)
+(* Problem 12a: number_in_months_challenge *)
+fun number_in_months_challenge(dates: date list, months: int list) =
+    number_in_months(dates, dedupe(months))
 
+(* Problem 12a: dates_in_months_challenge *)
+fun dates_in_months_challenge(dates: date list, months: int list) =
+    dates_in_months(dates, dedupe(months))
 
 (* Problem 13: reasonable_date *)
+fun reasonable_date(date: date) =
+    let
+        val year = (#1 date)
+        val month = (#2 date)
+        val day = (#3 date)
+    in
+        year > 0 andalso
+        (
+            (
+                month = 2 andalso 
+                day = 29 andalso 
+                (
+                    year mod 400 = 0 orelse 
+                    (year mod 4 = 0 andalso year mod 100 <> 0)
+                )
+            ) orelse
+            (
+                month >= 1 andalso 
+                month <= 12 andalso 
+                day >= 1 andalso 
+                day <= get_nth([31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31], month)
+            )
+        )
+    end

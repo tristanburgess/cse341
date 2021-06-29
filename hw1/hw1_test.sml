@@ -34,10 +34,10 @@ val p7_test1 = date_to_string((2013, 1, 20)) = "January 20, 2013"
 val p7_test2 = date_to_string((2021, 6, 20)) = "June 20, 2021"
 
 (* Problem 8: number_before_reaching_sum *)
-val p8_test1 = number_before_reaching_sum(40, [15, 10, 10, 5, 5]) = 4
-val p8_test2 = number_before_reaching_sum(40, [15, 10, 10, 10, 5]) = 4
-val p8_test3 = number_before_reaching_sum(40, [15, 10, 20, 10, 5]) = 3
-val p8_test4 = number_before_reaching_sum(40, [40, 10, 20, 10, 5]) = 1
+val p8_test1 = number_before_reaching_sum(40, [15, 10, 10, 5, 5]) = 3
+val p8_test2 = number_before_reaching_sum(40, [15, 10, 10, 10, 5]) = 3
+val p8_test3 = number_before_reaching_sum(40, [15, 10, 20, 10, 5]) = 2
+val p8_test4 = number_before_reaching_sum(40, [40, 10, 20, 10, 5]) = 0
 
 (* Problem 9: what_month *)
 val p9_test_jan_begin = what_month(1) = 1
@@ -77,11 +77,21 @@ val p11_some_oldest_first = oldest([(2021, 6, 3), (2021, 6, 4), (2021, 6, 5)]) =
 val p11_some_oldest_middle = oldest([(2021, 6, 5), (2021, 6, 3), (2021, 6, 4)]) = SOME((2021, 6, 3))
 val p11_some_oldest_last = oldest([(2021, 6, 5), (2021, 6, 4), (2021, 6, 3)]) = SOME((2021, 6, 3))
 
-(* Problem 12: number_in_months_challenge *)
+(* Problem 12a: number_in_months_challenge *)
+val p12a_no_dates = number_in_months_challenge([(2021, 1, 30), (2021, 1, 13), (2021, 4, 3)], [2, 3, 2]) = 0
+val p12a_one_date = number_in_months_challenge([(2021, 1, 30), (2021, 1, 13), (2021, 4, 3)], [4, 4]) = 1
+val p12a_diff_months = number_in_months_challenge([(2021, 1, 30), (2021, 1, 13), (2021, 4, 3)], [1, 4, 4, 1]) = 3
 
-
-(* Problem 12: dates_in_months_challenge *)
-
+(* Problem 12b: dates_in_months_challenge *)
+val p12b_no_dates = dates_in_months_challenge([(2021, 1, 30), (2021, 1, 13), (2021, 4, 3)], [2, 3, 2]) = []
+val p12b_one_date = dates_in_months_challenge([(2021, 1, 30), (2021, 1, 13), (2021, 4, 3)], [4, 4]) = [(2021, 4, 3)]
+val p12b_diff_months = dates_in_months_challenge([(2021, 1, 30), (2021, 1, 13), (2021, 4, 3)], [1, 4, 4, 1]) = [(2021, 4, 3), (2021, 1, 30), (2021, 1, 13)]
 
 (* Problem 13: reasonable_date *)
-
+val p13_real_date = reasonable_date(1, 6, 30) = true
+val p13_real_date_leap_year_hundred = reasonable_date(400, 2, 29) = true
+val p13_real_date_leap_year_four = reasonable_date(204, 2, 29) = true
+val p13_bad_date_year = reasonable_date(0, 6, 30) = false
+val p13_bad_date_month = reasonable_date(1, 13, 30) = false
+val p13_bad_date_day = reasonable_date(1, 6, 31) = false
+val p13_bad_date_leap_year = reasonable_date(200, 2, 29) = false
